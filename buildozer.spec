@@ -5,7 +5,7 @@ package.name = vipmovie
 package.domain = org.vipmovie
 source.dir = .
 source.include_exts = py
-source.include_patterns = core.py
+source.include_patterns = core.py,main.py
 version = 1.0
 
 requirements = python3,kivy,requests,beautifulsoup4
