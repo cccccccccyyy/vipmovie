@@ -20,7 +20,7 @@ icon.filename = icon.png
 android.permissions = INTERNET
 android.api = 34
 android.minapi = 21
-android.ndk = 25.2.9519653
+# android.ndk = auto (let buildozer choose)
 android.gradle_dependencies = androidx.webkit:webkit:1.8.0
 
 # Log level: 1 = warning, 2 = info (default), 4 = debug
