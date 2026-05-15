@@ -22,6 +22,7 @@ android.api = 34
 android.minapi = 21
 android.accept_sdk_license = True
 android.archs = arm64-v8a
+p4a.python_version = 3.12
 # android.ndk = auto (let buildozer choose)
 android.gradle_dependencies = androidx.webkit:webkit:1.8.0
 
