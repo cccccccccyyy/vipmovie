@@ -1,0 +1,95 @@
+name: 构建多平台打包
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  # ============================================================
+  # Windows: PyInstaller → vipmovie.exe
+  # ============================================================
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装依赖
+        run: pip install pyinstaller pillow requests beautifulsoup4
+
+      - name: 转换图标
+        run: |
+          python -c "from PIL import Image; img = Image.open('icon.png'); img.save('icon.ico', format='ICO', sizes=[(256,256)])"
+
+      - name: 构建 exe
+        run: pyinstaller --onefile --console --icon=icon.ico --name vipmovie vipmovie.py
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: vipmovie-Windows
+          path: dist/vipmovie.exe
+
+  # ============================================================
+  # Linux: PyInstaller → vipmovie
+  # ============================================================
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装依赖
+        run: pip install pyinstaller requests beautifulsoup4
+
+      - name: 构建二进制
+        run: pyinstaller --onefile --console --name vipmovie vipmovie.py
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: vipmovie-Linux
+          path: dist/vipmovie
+
+  # ============================================================
+  # Android: Buildozer → vipmovie.apk
+  # ============================================================
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装系统依赖
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq autoconf automake libtool libffi-dev zlib1g-dev libssl-dev openjdk-17-jdk-headless lld
+
+      - name: 安装 Python 依赖
+        run: pip install buildozer cython pillow
+
+      - name: 缓存 Buildozer
+        uses: actions/cache@v4
+        with:
+          path: ~/.buildozer
+          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          restore-keys: buildozer-${{ runner.os }}-
+
+      - name: 构建 APK
+        run: buildozer android debug
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: vipmovie-Android
+          path: bin/*.apk
