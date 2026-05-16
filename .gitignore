@@ -11,3 +11,4 @@ vipmovie.spec
 *.tar.gz
 *.zip
 .ipynb
+.claude/\nCLAUDE.md

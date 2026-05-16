@@ -26,12 +26,8 @@ p4a.python_version = 3.12
 # android.ndk = auto (let buildozer choose)
 android.gradle_dependencies = androidx.webkit:webkit:1.8.0
 
-# Log level: 1 = warning, 2 = info (default), 4 = debug
 log_level = 2
 warn_on_root = 1
-
-# Copy libraries instead of making big APK
-android.arch = arm64-v8a
 
 [buildozer]
 log_level = 2
